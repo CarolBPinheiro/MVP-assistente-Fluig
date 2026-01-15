@@ -14,7 +14,8 @@ const authSchema = z.object({
 });
 
 const Auth = () => {
-  const [email, setEmail] = useState("");
+  const [mode, setMode] = useState<"login" | "signup">("login");
+  const [email, setEmail] = useState("user-assistentefluig@fortbras.com.br");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
@@ -59,30 +60,66 @@ const Auth = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     setIsLoading(true);
 
     try {
+      if (mode === "signup") {
+        const redirectUrl = `${window.location.origin}/`;
+
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: redirectUrl,
+          },
+        });
+        if (error) throw error;
+
+        toast({
+          title: "Usuário criado!",
+          description: data.session
+            ? "Conta criada e acesso liberado."
+            : "Conta criada. Se necessário, verifique o email para confirmar.",
+        });
+
+        // Se houver sessão (auto-confirmação), o onAuthStateChange vai redirecionar.
+        // Caso não, voltamos para o login.
+        if (!data.session) {
+          setMode("login");
+        }
+
+        return;
+      }
+
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       if (error) throw error;
+
       toast({
         title: "Bem-vindo!",
         description: "Login realizado com sucesso.",
       });
     } catch (error: any) {
       let message = "Ocorreu um erro. Tente novamente.";
-      
-      if (error.message?.includes("Invalid login credentials")) {
+
+      const raw = String(error?.message ?? "");
+
+      if (raw.includes("Invalid login credentials")) {
         message = "Email ou senha incorretos.";
-      } else if (error.message?.includes("Email not confirmed")) {
+      } else if (raw.includes("Email not confirmed")) {
         message = "Por favor, confirme seu email antes de entrar.";
+      } else if (
+        raw.toLowerCase().includes("user already registered") ||
+        raw.toLowerCase().includes("already registered")
+      ) {
+        message = "Este email já possui cadastro. Use 'Acessar'.";
       }
-      
+
       toast({
         variant: "destructive",
         title: "Erro",
@@ -159,24 +196,43 @@ const Auth = () => {
           >
             {isLoading ? (
               <Loader2 className="w-5 h-5 animate-spin" />
+            ) : mode === "signup" ? (
+              "CRIAR USUÁRIO"
             ) : (
               "ACESSAR"
             )}
           </Button>
         </form>
 
-        {/* Forgot Password Link */}
-        <div className="mt-4 text-center">
+        {/* Forgot Password + First Access */}
+        <div className="mt-4 text-center space-y-3">
           <button
             type="button"
             className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
-            onClick={() => toast({
-              title: "Recuperação de senha",
-              description: "Entre em contato com o administrador do sistema.",
-            })}
+            onClick={() =>
+              toast({
+                title: "Recuperação de senha",
+                description: "Entre em contato com o administrador do sistema.",
+              })
+            }
           >
             Esqueceu sua senha?
           </button>
+
+          <div>
+            <button
+              type="button"
+              className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+              disabled={isLoading}
+              onClick={() => {
+                setErrors({});
+                setPassword("");
+                setMode((m) => (m === "login" ? "signup" : "login"));
+              }}
+            >
+              {mode === "login" ? "Primeiro acesso? Criar usuário" : "Já tem conta? Acessar"}
+            </button>
+          </div>
         </div>
       </div>
 
