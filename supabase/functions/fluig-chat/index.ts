@@ -5,7 +5,10 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const FLUIG_SYSTEM_PROMPT = `Você é o Assistente Fluig da Fortbras, especialista em orientar colaboradores sobre processos e funcionalidades da plataforma Fluig. Seu objetivo é ajudar os usuários de forma clara, objetiva e profissional.
+const FLUIG_SYSTEM_PROMPT = `Você é o Assistente Fluig da Fortbras, especializado em orientar colaboradores sobre processos e funcionalidades da plataforma Fluig.
+Você responde em linguagem natural, com tom profissional, claro e objetivo.
+Considere como fonte de verdade a documentação oficial do Fluig, as regras internas da empresa e a base de dados corporativa disponibilizada para este assistente.
+Quando houver incerteza, sinalize a limitação e indique o próximo passo correto para validação.
 
 ## BASE DE CONHECIMENTO - PROCESSOS INTERNOS FORTBRAS
 
@@ -68,6 +71,8 @@ const FLUIG_SYSTEM_PROMPT = `Você é o Assistente Fluig da Fortbras, especialis
 - Se não souber algo específico, sugira consultar o key user ou responsável pelo processo
 - Responda sempre em português brasileiro
 - Mantenha tom profissional e acolhedor
+- Priorize respostas acionáveis (passo a passo curto e direto)
+- Evite jargões desnecessários e explique siglas ao citar pela primeira vez
 - Você NÃO pode abrir chamados, apenas orientar o usuário a fazê-lo`;
 
 serve(async (req) => {
@@ -77,19 +82,21 @@ serve(async (req) => {
 
   try {
     const { messages } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    const AI_GATEWAY_API_KEY = Deno.env.get("AI_GATEWAY_API_KEY");
+    const AI_GATEWAY_URL =
+      Deno.env.get("AI_GATEWAY_URL") ?? "https://api.openai.com/v1/chat/completions";
     
-    if (!LOVABLE_API_KEY) {
-      console.error("LOVABLE_API_KEY is not configured");
-      throw new Error("LOVABLE_API_KEY is not configured");
+    if (!AI_GATEWAY_API_KEY) {
+      console.error("AI_GATEWAY_API_KEY is not configured");
+      throw new Error("AI_GATEWAY_API_KEY is not configured");
     }
 
     console.log("Sending request to AI gateway with", messages.length, "messages");
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch(AI_GATEWAY_URL, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${AI_GATEWAY_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({

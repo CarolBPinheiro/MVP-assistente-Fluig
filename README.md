@@ -1,33 +1,67 @@
-Assistente de IA para Fluig
+# Assistente de IA para Fluig
 
-Este projeto consiste em um assistente inteligente integrado à plataforma Fluig, desenvolvido para auxiliar usuários na resolução de dúvidas, navegação no sistema e acesso rápido à documentação.
+MVP de um assistente inteligente para a plataforma Fluig, projetado para atendimento em linguagem natural e suporte operacional no dia a dia da empresa.
 
-O assistente utiliza modelos de linguagem avançados por meio das APIs do GPT e Gemini, garantindo respostas mais precisas, contextualizadas e atualizadas.
+## Objetivo do MVP
 
- Sobre o projeto
+Oferecer um canal rápido e confiável para orientar colaboradores sobre:
 
-O Assistente de IA foi criado para melhorar a experiência dos usuários dentro do Fluig, reduzindo a necessidade de suporte técnico direto e facilitando o acesso à informação.
+- processos internos;
+- fluxos de aprovação;
+- uso funcional do Fluig;
+- caminhos corretos para abertura de chamados.
 
-Ele é capaz de interpretar perguntas em linguagem natural e responder com base na documentação oficial da plataforma, além de auxiliar em tarefas comuns do dia a dia.
+## Proposta de valor
 
- Funcionalidades principais
- Atendimento automatizado
-Responde dúvidas frequentes dos usuários
-Interpreta linguagem natural
- Consulta à documentação
-Busca e apresenta informações relevantes da documentação do Fluig
-Explica processos e funcionalidades da plataforma
- Integração com APIs de IA
-Utiliza GPT para geração de respostas
-Utiliza Gemini como suporte complementar de IA
- Contextualização inteligente
-Respostas adaptadas ao contexto do usuário
-Possibilidade de evolução com histórico de interações
- Integração com Fluig
-Disponível diretamente na interface da plataforma
-Pode ser incorporado em workflows e portais
- Tecnologias utilizadas
-JavaScript / TypeScript
-APIs de IA (GPT e Gemini)
-Integração com Fluig (widgets, APIs e serviços internos)
-REST APIs
+O assistente combina:
+
+- documentação oficial do Fluig;
+- regras e conteúdos internos da empresa;
+- referências corporativas estruturadas (base de dados da operação).
+
+Com isso, as respostas são mais contextualizadas e acionáveis para o cenário real da organização.
+
+## Funcionalidades principais
+
+- **Atendimento conversacional**: interpreta perguntas em linguagem natural.
+- **Orientação prática**: responde com passo a passo e caminho exato no Fluig.
+- **Suporte a dúvidas recorrentes**: reduz volume de chamados simples.
+- **Escalonamento consciente**: quando necessário, orienta o usuário a procurar o key user ou área responsável.
+- **Interface de chat moderna**: experiência direta para uso em ambiente corporativo.
+
+## Arquitetura (visão geral)
+
+- **Frontend**: React + TypeScript + Vite + Tailwind.
+- **Backend conversacional**: Supabase Edge Function para orquestrar chamadas ao modelo de IA.
+- **Autenticação**: Supabase Auth.
+- **Integração de IA**: endpoint configurável via variáveis de ambiente.
+
+## Configuração rápida
+
+1. Instale dependências:
+
+```bash
+npm install
+```
+
+2. Configure variáveis no ambiente:
+
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_PUBLISHABLE_KEY`
+- `AI_GATEWAY_API_KEY`
+- `AI_GATEWAY_URL` (opcional; padrão: endpoint de Chat Completions compatível)
+
+3. Execute localmente:
+
+```bash
+npm run dev
+```
+
+## Posicionamento para apresentação
+
+Este MVP demonstra como IA aplicada ao Fluig pode:
+
+- acelerar a curva de aprendizado dos usuários;
+- padronizar orientações de processo;
+- aumentar produtividade do suporte;
+- melhorar a experiência digital interna com respostas claras e naturais.

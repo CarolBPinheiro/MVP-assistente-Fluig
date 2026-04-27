@@ -17,6 +17,8 @@ const suggestedQuestions = [
   "Como configurar permissões de documentos?",
   "O que são datasets e como usá-los?",
   "Como monitorar workflows ativos?",
+  "Como abrir um chamado corretamente para erro no Fluig?",
+  "Quais informações preciso enviar para acelerar o atendimento?",
 ];
 
 const ChatInterface = () => {
@@ -193,7 +195,7 @@ const ChatInterface = () => {
               Olá! Sou o Assistente Fluig
             </h2>
             <p className="text-muted-foreground max-w-md mb-8">
-              Estou aqui para ajudar com suas dúvidas sobre processos, documentos e funcionalidades do Fluig.
+              Estou aqui para ajudar em linguagem natural com processos, documentos e funcionalidades do Fluig, usando a documentação da plataforma e a base interna da empresa.
             </p>
             
             <div className="w-full max-w-lg">
@@ -290,7 +292,7 @@ const ChatInterface = () => {
             </Button>
           </div>
           <p className="text-xs text-muted-foreground text-center mt-3">
-            O assistente pode cometer erros. Verifique informações importantes.
+            As respostas são geradas por IA com base na documentação Fluig e referências internas. Sempre valide decisões críticas com o responsável do processo.
           </p>
         </div>
       </div>
